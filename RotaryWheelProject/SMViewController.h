@@ -11,6 +11,6 @@
 
 @interface SMViewController : UIViewController <SMRotaryProtocol>
 
-@property (nonatomic, strong) SMRotaryWheel *wheel;
+@property (nonatomic, retain) SMRotaryWheel *wheel;
 
 @end

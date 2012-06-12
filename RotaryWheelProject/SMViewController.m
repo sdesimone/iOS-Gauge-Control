@@ -23,13 +23,18 @@
 {
     [super viewDidLoad];
     
-    wheel = [[SMRotaryWheel alloc] initWithFrame:CGRectMake(0, 0, 200, 200) 
+    wheel = [[[SMRotaryWheel alloc] initWithFrame:CGRectMake(0, 0, 200, 200) 
                                      andDelegate:self 
-                                    withSections:8];
+                                    withSections:8] autorelease];
     
     wheel.center = CGPointMake(160, 240);
     [self.view addSubview:wheel];
 
+}
+
+- (void)dealloc {
+    [wheel release];
+    [super dealloc];
 }
 
 - (void) didChangeValue:(NSString *)newValue {

@@ -94,6 +94,16 @@ static float maxAlphavalue = 1.0;
     
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)dealloc {
+    
+    self.container = nil;
+    self.cloves = nil;
+    self.cloveNames = nil;
+    self.currentValue = nil;
+    [super dealloc];
+}
+
 
 
 - (UILabel *) getLabelByValue:(int)value {

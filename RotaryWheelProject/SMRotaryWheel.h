@@ -5,20 +5,23 @@
 //  Created by cesarerocchi on 2/10/12.
 //  Copyright (c) 2012 studiomagnolia.com. All rights reserved.
 
+// Changes by Sergio De Simone, freescaepes labs
+// converted to not using ARC
+
 #import <UIKit/UIKit.h>
 #import "SMRotaryProtocol.h"
 #import "SMClove.h"
 
 @interface SMRotaryWheel : UIView 
 
-@property (weak) id <SMRotaryProtocol> delegate;
-@property (nonatomic, strong) UIView *container;
-@property (nonatomic, strong) NSMutableArray *cloves;
+@property (assign) id <SMRotaryProtocol> delegate;
+@property (nonatomic, retain) UIView *container;
+@property (nonatomic, retain) NSMutableArray *cloves;
 @property CGAffineTransform startTransform;
 @property int currentValue;
 @property int numberOfSections;
 @property CGPoint wheelCenter;
-@property (nonatomic, strong) NSMutableDictionary *cloveNames;
+@property (nonatomic, retain) NSMutableDictionary *cloveNames;
 
 - (id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber;
 - (void) initWheel;
