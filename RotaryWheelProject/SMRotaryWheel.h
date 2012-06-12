@@ -7,29 +7,19 @@
 
 // Changes by Sergio De Simone, freescaepes labs
 // converted to not using ARC
+// moved private members to .m file
 
 #import <UIKit/UIKit.h>
-#import "SMRotaryProtocol.h"
+#import "SMRotaryWheelProtocols.h"
 #import "SMClove.h"
 
 @interface SMRotaryWheel : UIView 
 
-@property (assign) id <SMRotaryProtocol> delegate;
-@property (nonatomic, retain) UIView *container;
-@property (nonatomic, retain) NSMutableArray *cloves;
-@property CGAffineTransform startTransform;
-@property int currentValue;
-@property int numberOfSections;
-@property CGPoint wheelCenter;
-@property (nonatomic, retain) NSMutableDictionary *cloveNames;
+@property (nonatomic, readonly) NSString* wheelId;
+@property (nonatomic, assign) id <SMRotaryWheelDelegate> delegate;
+@property (nonatomic, assign) id <SMRotaryWheelDatasource> datasource;
 
-- (id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber;
-- (void) initWheel;
-- (void) buildClovesEven;
-- (void) buildClovesOdd;
-- (float) calculateDistanceFromCenter:(CGPoint)point;
-- (UILabel *) getLabelByValue:(int)value;
-- (NSString *) getCloveName:(int)position;
+- (id)initWithFrame:(CGRect)frame delegate:(id<SMRotaryWheelDelegate>)del datasource:(id<SMRotaryWheelDatasource>)ds;
 
 
 @end
