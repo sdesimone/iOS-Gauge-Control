@@ -59,61 +59,70 @@ static float maxAlphavalue = 1.0;
 }
 
 
-- (void) initWheel {
-        
-    container = [[UIView alloc] initWithFrame:self.frame];
+//////////////////////////////////////////////////////////////////////////////////////////
+//-- everything is set in terms of layers
+//-- reload/update of datasource is supported
+//-- initial arbitrary rotation of the wheel is also available
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)layoutSubviews {
     
-    cloves = [NSMutableArray arrayWithCapacity:numberOfSections];
+    self.container = [CALayer layer];
+    self.container.frame = self.bounds;
     
-    // Calculate angle between each clove
+    self.numberOfSections = [self.datasource numberOfCloves];
+    self.cloves = [NSMutableArray arrayWithCapacity:self.numberOfSections];
+    
+    if (numberOfSections % 2 == 0)
+        [self buildClovesEven];
+    else
+        [self buildClovesOdd];
+    
     CGFloat angleSize = 2*M_PI/numberOfSections;
-    
+    self.currentValue = [NSString stringWithFormat:@"%d", [self.datasource currentClove]];
     for (int i = 0; i < numberOfSections; i++) {
         
-        UIImageView *im = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"segment.png"]];
+        CALayer* cloveBkg = [CALayer layerWithImage:[self.datasource cloveBackgroungAtIndex:i]];
+        cloveBkg.anchorPoint = CGPointMake(1.0f, 0.5f);
+        cloveBkg.position = CGPointMake(container.bounds.size.width/2.0, container.bounds.size.height/2.0); 
+        cloveBkg.opacity = (i == 0)?maxAlphavalue:minAlphavalue;
+        cloveBkg.name = [self layerNameForClove:i];
+        [container addSublayer:cloveBkg];
         
-        im.layer.anchorPoint = CGPointMake(1.0f, 0.5f);
-        im.layer.position = CGPointMake(container.bounds.size.width/2.0-container.frame.origin.x, 
-                                                container.bounds.size.height/2.0-container.frame.origin.y); 
-        im.transform = CGAffineTransformMakeRotation(angleSize*i);
-        im.alpha = minAlphavalue;
-        im.tag = i;
+        CALayer* cloveImage = [CALayer layerWithImage:[self.datasource cloveForegroungAtIndex:[cloveBkg.name intValue]]];
+        cloveImage.position = CGPointMake(cloveBkg.frame.size.width/2, cloveBkg.frame.size.height/2);
+        cloveImage.anchorPoint = CGPointMake(0.8, 0.5);
         
-        if (i == 0) {
-            im.alpha = maxAlphavalue;
-        }
+        NSLog(@"cloveImg Frame: %f, %f, %f, %f", cloveImage.frame.origin.x, cloveImage.frame.origin.y,
+              cloveImage.frame.size.width, cloveImage.frame.size.height);
+        NSLog(@"cloveBkg FRAME: %f, %f, %f, %f", cloveBkg.frame.origin.x, cloveBkg.frame.origin.y,
+              cloveBkg.frame.size.width, cloveBkg.frame.size.height);
         
-        UIImageView *cloveImage = [[UIImageView alloc] initWithFrame:CGRectMake(12, 15, 40, 40)];
-        cloveImage.image = [UIImage imageNamed:[NSString stringWithFormat:@"icon%i.png", i]];
-        [im addSubview:cloveImage];
         
-        [container addSubview:im];
-        
+        cloveImage.affineTransform = CGAffineTransformMakeScale(0.8, 0.8);
+        cloveBkg.affineTransform = CGAffineTransformMakeScale(container.bounds.size.width/640.0, container.bounds.size.height/640.0);
+        cloveBkg.affineTransform = CGAffineTransformRotate(cloveBkg.affineTransform, angleSize*i);
+        [cloveBkg addSublayer:cloveImage];
     }
     
-    container.userInteractionEnabled = NO;
-    [self addSubview:container];
+    CALayer* bg = [CALayer layerWithImage:[self.datasource wheelBackground]];
+    bg.frame = self.frame;
+    bg.name = kBackgroundLayerName;
+    bg.position = [self convertPoint:self.center fromView:self.superview];
     
-    UIImageView *bg = [[UIImageView alloc] initWithFrame:self.frame];
-    bg.image = [UIImage imageNamed:@"bg.png"];
-    [self addSubview:bg];
+    CALayer* budLayer = [CALayer layerWithImage:[self.datasource bud]];
+    budLayer.position = [self convertPoint:self.center fromView:self.superview];
+    budLayer.affineTransform = CGAffineTransformMakeScale(container.bounds.size.width/640.0, container.bounds.size.height/640.0);
+    budLayer.name = kBudLayerName;
     
-    UIImageView *mask = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 58, 58)];
-    mask.image =[UIImage imageNamed:@"centerButton.png"] ;
-    mask.center = self.center;
-    mask.center = CGPointMake(mask.center.x, mask.center.y+3);
-    [self addSubview:mask];
+    [self.layer addSublayer:container];
+    [self.layer addSublayer:bg];
+    [self.layer addSublayer:budLayer];
     
-    if (numberOfSections % 2 == 0) {
-    
-        [self buildClovesEven];
+    //    [super layoutSubviews];
+}
+
+- (void) initWheel {
         
-    } else {
-    
-        [self buildClovesOdd];
-        
-    }
-    
     [self.delegate didChangeValue:[self getCloveName:0]];
     
 }
@@ -130,22 +139,17 @@ static float maxAlphavalue = 1.0;
 
 
 
-- (UILabel *) getLabelByValue:(int)value {
+//////////////////////////////////////////////////////////////////////////////////////////
+- (CALayer*)getLabelByValue:(NSString*)value {
     
-    UILabel *res;
-    
-    NSArray *labels = [container subviews];
-    
-    for (UILabel *lab in labels) {
-        
-        if (lab.tag == value)
-            res = lab;
-        
+    CALayer* res = nil;
+    for (CALayer* l in [container sublayers]) {
+        if ([l.name isEqual:value])
+            res = l;
     }
-    
     return res;
-    
 }
+
 
 - (void) buildClovesEven {
     
