@@ -71,6 +71,11 @@ static float maxAlphavalue = 1.0;
     return self;
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+- (NSString*)layerNameForClove:(NSUInteger)i {
+    return [NSString stringWithFormat:@"%@%d", kCloveLayerName, (i +  [self.datasource currentClove]) % self.numberOfSections];
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //-- everything is set in terms of layers

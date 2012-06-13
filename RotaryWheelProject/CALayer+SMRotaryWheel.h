@@ -15,5 +15,6 @@
 @interface CALayer (SMRotaryExtension)
 
 - (void)setContentsWithImage:(UIImage*)image;
-
++ (id)layerWithImage:(UIImage*)img;
+    
 @end
