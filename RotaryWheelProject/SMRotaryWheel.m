@@ -149,6 +149,19 @@ static float maxAlphavalue = 1.0;
     [super dealloc];
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)reload {    
+    CATransition* transition = [CATransition animation];
+    transition.delegate = nil;
+    transition.duration = 0.75;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName: kCAMediaTimingFunctionEaseOut];
+    transition.type = kCATransitionFade;
+    [self.layer addAnimation:transition forKey:@"kCATransition"];
+    while ([self.layer.sublayers count] > 0) {
+        [[self.layer.sublayers objectAtIndex:0] removeFromSuperlayer];
+    }
+    [self layoutSubviews];
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
