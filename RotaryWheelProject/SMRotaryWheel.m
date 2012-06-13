@@ -46,17 +46,27 @@ static float maxAlphavalue = 1.0;
 
 @implementation SMRotaryWheel
 
+@synthesize datasource;
 @synthesize startTransform, container, cloves, currentValue, delegate, wheelCenter, cloveNames, numberOfSections;
 
               
-- (id) initWithFrame:(CGRect)frame andDelegate:(id)del withSections:(int)sectionsNumber {
+- (void) initWheel {
+    
+    [self.delegate didChangeValue:[self.datasource currentClove]];
+    
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
+- (id) initWithFrame:(CGRect)frame
+            delegate:(id<SMRotaryWheelDelegate>)del
+          datasource:(id<SMRotaryWheelDatasource>)ds {
     
     if ((self = [super initWithFrame:frame])) {
 		
-        self.numberOfSections = sectionsNumber;
         self.delegate = del;
+        self.datasource = ds;
+        self.numberOfSections = [self.datasource numberOfCloves];
 		[self initWheel];
-        
 	}
     return self;
 }
@@ -122,12 +132,6 @@ static float maxAlphavalue = 1.0;
     [self.layer addSublayer:budLayer];
     
     //    [super layoutSubviews];
-}
-
-- (void) initWheel {
-        
-    [self.delegate didChangeValue:[self.datasource currentClove]];
-    
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
