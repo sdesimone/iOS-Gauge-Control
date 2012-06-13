@@ -7,6 +7,16 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol SMRotaryWheelDatasource <NSObject>
+- (NSUInteger)numberOfCloves;
+- (NSUInteger)currentClove;
+- (UIImage*)wheelBackground;
+- (UIImage*)bud;
+- (UIImage*)cloveBackgroungAtIndex:(NSUInteger)index;
+- (UIImage*)cloveForegroungAtIndex:(NSUInteger)index;
+@end
+
+
 @protocol SMRotaryProtocol <NSObject>
 
 - (void) didChangeValue:(NSString *)newValue;
