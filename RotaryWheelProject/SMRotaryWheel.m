@@ -176,42 +176,7 @@ static float maxAlphavalue = 1.0;
 }
 
 
-- (void) buildClovesEven {
-    
-    CGFloat fanWidth = M_PI*2/numberOfSections;
-    CGFloat mid = 0;
-    
-    for (int i = 0; i < numberOfSections; i++) {
-        
-        SMClove *clove = [[SMClove alloc] init];
-        clove.midValue = mid;
-        clove.minValue = mid - (fanWidth/2);
-        clove.maxValue = mid + (fanWidth/2);
-        clove.value = i;
-        
-        
-        if (clove.maxValue-fanWidth < - M_PI) {
-            
-            mid = 3.14;
-            clove.midValue = mid;
-            clove.minValue = fabsf(clove.maxValue);
-            
-        }
-        
-        mid -= fanWidth;
-        
-        
-        NSLog(@"cl is %@", clove);
-        
-        [cloves addObject:clove];
-        
-    }
-
-}
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////
 - (float) calculateDistanceFromCenter:(CGPoint)point {
 
     CGPoint center = CGPointMake(self.bounds.size.width/2.0f, self.bounds.size.height/2.0f);
@@ -220,32 +185,6 @@ static float maxAlphavalue = 1.0;
 	return sqrt(dx*dx + dy*dy);
     
 }
-
--(void) touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-
-    UITouch *touch = [touches anyObject];
-    CGPoint delta = [touch locationInView:self];
-    float dist = [self calculateDistanceFromCenter:delta];
-    
-    if (dist < 40 || dist > 100) 
-    {
-        // forcing a tap to be on the ferrule
-        NSLog(@"ignoring tap (%f,%f)", delta.x, delta.y);
-        return;
-    }
-    
-    startTransform = container.transform;
-    
-    UILabel *lab = [self getLabelByValue:currentValue];
-    lab.alpha = minAlphavalue;
-    
-	float dx = delta.x  - container.center.x;
-	float dy = delta.y  - container.center.y;
-	deltaAngle = atan2(dy,dx); 
-    
-}
-
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
@@ -334,6 +273,33 @@ static float maxAlphavalue = 1.0;
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)buildClovesEven {
+    
+    CGFloat fanWidth = M_PI*2/numberOfSections;
+    CGFloat mid = 0;
+    
+    for (int i = 0; i < numberOfSections; i++) {
+        
+        SMClove *clove = [[[SMClove alloc] init] autorelease];
+        clove.midValue = mid;
+        clove.minValue = mid - (fanWidth/2);
+        clove.maxValue = mid + (fanWidth/2);
+        clove.value = [self layerNameForClove:i];
+        
+        if (clove.maxValue-fanWidth < - M_PI) {
+            
+            mid = 3.14;
+            clove.midValue = mid;
+            clove.minValue = fabsf(clove.maxValue);
+            
+        }
+        mid -= fanWidth;
+        [cloves addObject:clove];        
+    }
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////
 - (void) buildClovesOdd {
     
     CGFloat fanWidth = M_PI*2/numberOfSections;
@@ -341,11 +307,11 @@ static float maxAlphavalue = 1.0;
     
     for (int i = 0; i < numberOfSections; i++) {
         
-        SMClove *clove = [[SMClove alloc] init];
+        SMClove *clove = [[[SMClove alloc] init] autorelease];
         clove.midValue = mid;
         clove.minValue = mid - (fanWidth/2);
         clove.maxValue = mid + (fanWidth/2);
-        clove.value = i;
+        clove.value = [self layerNameForClove:i];
         
         mid -= fanWidth;
         
@@ -356,14 +322,12 @@ static float maxAlphavalue = 1.0;
             
         }
         
-        
-        NSLog(@"cl is %@", clove);
-        
         [cloves addObject:clove];
         
     }
     
     
 }
+
 
 @end
