@@ -123,7 +123,7 @@ static float maxAlphavalue = 1.0;
 
 - (void) initWheel {
         
-    [self.delegate didChangeValue:[self getCloveName:0]];
+    [self.delegate didChangeValue:[self.datasource currentClove]];
     
 }
 
@@ -290,58 +290,8 @@ static float maxAlphavalue = 1.0;
     UILabel *lab = [self getLabelByValue:currentValue];
     lab.alpha = maxAlphavalue;
     
-    [self.delegate didChangeValue:[self getCloveName:currentValue]];
+    [self.delegate didChangeValue:[self.currentValue intValue]];
     
-}
-
-
-
-- (NSString *) getCloveName:(int)position {
-
-    NSString *res = @"";
-    
-    switch (position) {
-        case 0:
-            res = @"Circles";
-            break;
-            
-        case 1:
-            res = @"Flower";
-            break;
-            
-        case 2:
-            res = @"Monster";
-            break;
-            
-        case 3:
-            res = @"Person";
-            break;
-            
-        case 4:
-            res = @"Smile";
-            break;
-            
-        case 5:
-            res = @"Sun";
-            break;
-            
-        case 6:
-            res = @"Swirl";
-            break;
-            
-        case 7:
-            res = @"3 circles";
-            break;
-            
-        case 8:
-            res = @"Triangle";
-            break;
-            
-        default:
-            break;
-    }
-    
-    return res;
 }
 
 - (void) buildClovesOdd {
