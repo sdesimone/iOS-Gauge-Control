@@ -7,9 +7,9 @@
 
 #import <UIKit/UIKit.h>
 #import "SMRotaryWheel.h"
-#import "SMRotaryProtocol.h"
+#import "SMRotaryWheelProtocols.h"
 
-@interface SMViewController : UIViewController <SMRotaryProtocol>
+@interface SMViewController : UIViewController <SMRotaryWheelDelegate>
 
 @property (nonatomic, retain) SMRotaryWheel *wheel;
 

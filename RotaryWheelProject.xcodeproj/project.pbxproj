@@ -46,7 +46,7 @@
 		BDF4386814E55A0D00A27135 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SMViewController.xib; sourceTree = "<group>"; };
 		BDF4387314E55BC000A27135 /* SMClove.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMClove.h; sourceTree = "<group>"; };
 		BDF4387414E55BC000A27135 /* SMClove.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMClove.m; sourceTree = "<group>"; };
-		BDF4387514E55BC000A27135 /* SMRotaryProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMRotaryProtocol.h; sourceTree = "<group>"; };
+		BDF4387514E55BC000A27135 /* SMRotaryWheelProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMRotaryWheelProtocols.h; sourceTree = "<group>"; };
 		BDF4387614E55BC000A27135 /* SMRotaryWheel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMRotaryWheel.h; sourceTree = "<group>"; };
 		BDF4387714E55BC000A27135 /* SMRotaryWheel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMRotaryWheel.m; sourceTree = "<group>"; };
 		BDF4387B14E55C3400A27135 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 				BDF4387A14E55C2700A27135 /* assets */,
 				BDF4387314E55BC000A27135 /* SMClove.h */,
 				BDF4387414E55BC000A27135 /* SMClove.m */,
-				BDF4387514E55BC000A27135 /* SMRotaryProtocol.h */,
+				BDF4387514E55BC000A27135 /* SMRotaryWheelProtocols.h */,
 				BDF4387614E55BC000A27135 /* SMRotaryWheel.h */,
 				BDF4387714E55BC000A27135 /* SMRotaryWheel.m */,
 				BDF4386114E55A0D00A27135 /* SMAppDelegate.h */,

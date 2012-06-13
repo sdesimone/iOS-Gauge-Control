@@ -14,6 +14,10 @@
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
 
+static float deltaAngle;
+static float minAlphavalue = 0.6;
+static float maxAlphavalue = 1.0;
+
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -21,6 +25,7 @@
 
 @property CGPoint wheelCenter;
 @property int numberOfSections;
+@property(nonatomic) BOOL isTouchBegan;
 @property CGAffineTransform startTransform;
 @property (nonatomic, retain) CALayer* container;
 @property (nonatomic,retain) NSString* currentValue;
@@ -35,25 +40,19 @@
 @end
 
 
-
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////
-static float deltaAngle;
-static float minAlphavalue = 0.6;
-static float maxAlphavalue = 1.0;
-
-
 @implementation SMRotaryWheel
 
+@synthesize isTouchBegan;
 @synthesize datasource;
+@synthesize wheelId;
 @synthesize startTransform, container, cloves, currentValue, delegate, wheelCenter, cloveNames, numberOfSections;
 
-              
+//////////////////////////////////////////////////////////////////////////////////////////
 - (void) initWheel {
-    
-    [self.delegate didChangeValue:[self.datasource currentClove]];
-    
+    [self.delegate wheel:self didChangeValue:[self.datasource currentClove]];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -71,11 +70,25 @@ static float maxAlphavalue = 1.0;
     return self;
 }
 
+
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)dealloc {
+    
+    self.container = nil;
+    self.cloves = nil;
+    self.cloveNames = nil;
+    self.currentValue = nil;
+    [super dealloc];
+}
+
+#define kCloveContainerLayerName @"cloveContainer"
+#define kBackgroundLayerName @"wheelBkg"
+#define kCloveLayerName @""
+#define kBudLayerName @"wheelBud"
 //////////////////////////////////////////////////////////////////////////////////////////
 - (NSString*)layerNameForClove:(NSUInteger)i {
     return [NSString stringWithFormat:@"%@%d", kCloveLayerName, (i +  [self.datasource currentClove]) % self.numberOfSections];
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //-- everything is set in terms of layers
@@ -140,16 +153,6 @@ static float maxAlphavalue = 1.0;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-- (void)dealloc {
-    
-    self.container = nil;
-    self.cloves = nil;
-    self.cloveNames = nil;
-    self.currentValue = nil;
-    [super dealloc];
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
 - (void)reload {    
     CATransition* transition = [CATransition animation];
     transition.delegate = nil;
@@ -160,9 +163,8 @@ static float maxAlphavalue = 1.0;
     while ([self.layer.sublayers count] > 0) {
         [[self.layer.sublayers objectAtIndex:0] removeFromSuperlayer];
     }
-    [self layoutSubviews];
+    [self layoutSubviewsss];
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 - (CALayer*)getLabelByValue:(NSString*)value {
@@ -175,10 +177,9 @@ static float maxAlphavalue = 1.0;
     return res;
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////
-- (float) calculateDistanceFromCenter:(CGPoint)point {
-
+- (float)calculateDistanceFromCenter:(CGPoint)point {
+    
     CGPoint center = CGPointMake(self.bounds.size.width/2.0f, self.bounds.size.height/2.0f);
 	float dx = point.x - center.x;
 	float dy = point.y - center.y;
@@ -272,7 +273,6 @@ static float maxAlphavalue = 1.0;
     [self.delegate wheel:self didChangeValue:[self.currentValue intValue]];
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////
 - (void)buildClovesEven {
     
@@ -328,6 +328,5 @@ static float maxAlphavalue = 1.0;
     
     
 }
-
 
 @end
