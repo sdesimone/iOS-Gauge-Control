@@ -22,6 +22,7 @@
 @property CGPoint wheelCenter;
 @property int numberOfSections;
 @property CGAffineTransform startTransform;
+@property (nonatomic, retain) CALayer* container;
 @property (nonatomic,retain) NSString* currentValue;
 @property (nonatomic, retain) NSMutableArray* cloves;
 @property (nonatomic, retain) NSMutableDictionary* cloveNames;
