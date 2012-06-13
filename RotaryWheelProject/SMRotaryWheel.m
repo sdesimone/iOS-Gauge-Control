@@ -247,77 +247,92 @@ static float maxAlphavalue = 1.0;
 
 
 
+//////////////////////////////////////////////////////////////////////////////////////////
+-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    
+    UITouch *touch = [touches anyObject];
+    CGPoint delta = [touch locationInView:self];
+    float dist = [self calculateDistanceFromCenter:delta];
+    
+    if (dist < 40 || dist > 100) {
+        // forcing a tap to be on the ferrule
+        //        NSLog(@"ignoring tap (%f,%f)", delta.x, delta.y);
+        self.isTouchBegan = NO;
+        //        [self.delegate wheelDidReceiveBudTap:self];
+        return;
+    }
+    self.isTouchBegan = YES;
+    
+    startTransform = container.affineTransform;
+    
+    CALayer* l = [self getLabelByValue:self.currentValue];
+    l.opacity = minAlphavalue;
+    
+	float dx = delta.x  - container.position.x;
+	float dy = delta.y  - container.position.y;
+	deltaAngle = atan2(dy,dx); 
+    
+}
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
-{
+//////////////////////////////////////////////////////////////////////////////////////////
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    if (!self.isTouchBegan) return;
+    
     UITouch *touch = [touches anyObject];
     
     CGPoint pt = [touch locationInView:self];
 	
-	float dx = pt.x  - container.center.x;
-	float dy = pt.y  - container.center.y;
+	float dx = pt.x  - container.position.x;
+	float dy = pt.y  - container.position.y;
 	float ang = atan2(dy,dx);
     
     float angleDif = deltaAngle - ang;
     
     CGAffineTransform newTrans = CGAffineTransformRotate(startTransform, -angleDif);
-    container.transform = newTrans;
+    container.affineTransform = newTrans;
     
     //[self sendActionsForControlEvents:UIControlEventValueChanged];
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-
-    CGFloat radians = atan2f(container.transform.b, container.transform.a);
-    NSLog(@"rad is %f", radians);
     
+    if (!self.isTouchBegan) return;
+    
+    CGFloat radians = atan2f(container.affineTransform.b, container.affineTransform.a);    
     CGFloat newVal = 0.0;
     
-    for (SMClove *c in cloves) {
-        
+    for (SMClove* c in cloves) {
         if (c.minValue > 0 && c.maxValue < 0) {
-            
             if (c.maxValue > radians || c.minValue < radians) {
-                
-                if (radians > 0) {
-                    
+                if (radians > 0)
                     newVal = radians - M_PI;
-                    
-                } else {
-                    
+                else
                     newVal = M_PI + radians;                    
-                    
-                }
-                currentValue = c.value;
-                
+                self.currentValue = c.value;
             }
-            
         }
         
         if (radians > c.minValue && radians < c.maxValue) {
-            
             newVal = radians - c.midValue;
-            currentValue = c.value;
-            
+            self.currentValue = c.value;
         }
-        
     }
     
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.2];
     
-    CGAffineTransform t = CGAffineTransformRotate(container.transform, -newVal);
-    container.transform = t;
+    CGAffineTransform t = CGAffineTransformRotate(container.affineTransform, -newVal);
+    container.affineTransform = t;
     
     [UIView commitAnimations];
     
-    UILabel *lab = [self getLabelByValue:currentValue];
-    lab.alpha = maxAlphavalue;
+    CALayer *l = [self getLabelByValue:self.currentValue];
+    l.opacity = maxAlphavalue;
     
-    [self.delegate didChangeValue:[self.currentValue intValue]];
-    
+    [self.delegate wheel:self didChangeValue:[self.currentValue intValue]];
 }
+
 
 - (void) buildClovesOdd {
     
