@@ -7,6 +7,8 @@
 
 #import "SMRotaryWheel.h"
 #import <QuartzCore/QuartzCore.h>
+#import "CALayer+SMRotaryWheel.h"
+#import "CALayer+SDSLayerByName.m"
 
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 #define DEGREES_TO_RADIANS(angle) ((angle) / 180.0 * M_PI)
