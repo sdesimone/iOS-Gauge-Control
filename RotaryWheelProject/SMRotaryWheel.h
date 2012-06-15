@@ -7,7 +7,6 @@
 
 // Changes by Sergio De Simone, freescaepes labs
 // converted to not using ARC
-// moved private members to .m file
 
 #import <UIKit/UIKit.h>
 #import "SMRotaryWheelProtocols.h"
@@ -20,6 +19,7 @@
 @property (nonatomic, assign) id <SMRotaryWheelDatasource> datasource;
 
 - (id)initWithFrame:(CGRect)frame delegate:(id<SMRotaryWheelDelegate>)del datasource:(id<SMRotaryWheelDatasource>)ds;
+- (void)reload;
 
 
 @end

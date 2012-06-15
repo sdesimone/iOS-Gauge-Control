@@ -73,7 +73,7 @@ static float maxAlphavalue = 1.0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 - (void)dealloc {
-    
+        
     self.container = nil;
     self.cloves = nil;
     self.cloveNames = nil;
@@ -95,11 +95,11 @@ static float maxAlphavalue = 1.0;
 //-- reload/update of datasource is supported
 //-- initial arbitrary rotation of the wheel is also available
 //////////////////////////////////////////////////////////////////////////////////////////
-- (void)layoutSubviews {
+- (void)layoutSubviewsss {
     
     self.container = [CALayer layer];
     self.container.frame = self.bounds;
-    
+
     self.numberOfSections = [self.datasource numberOfCloves];
     self.cloves = [NSMutableArray arrayWithCapacity:self.numberOfSections];
     
@@ -111,7 +111,7 @@ static float maxAlphavalue = 1.0;
     CGFloat angleSize = 2*M_PI/numberOfSections;
     self.currentValue = [NSString stringWithFormat:@"%d", [self.datasource currentClove]];
     for (int i = 0; i < numberOfSections; i++) {
-        
+                
         CALayer* cloveBkg = [CALayer layerWithImage:[self.datasource cloveBackgroungAtIndex:i]];
         cloveBkg.anchorPoint = CGPointMake(1.0f, 0.5f);
         cloveBkg.position = CGPointMake(container.bounds.size.width/2.0, container.bounds.size.height/2.0); 
@@ -119,15 +119,9 @@ static float maxAlphavalue = 1.0;
         cloveBkg.name = [self layerNameForClove:i];
         [container addSublayer:cloveBkg];
         
-        CALayer* cloveImage = [CALayer layerWithImage:[self.datasource cloveForegroungAtIndex:[cloveBkg.name intValue]]];
+        CALayer* cloveImage = [CALayer layerWithContents:[self.datasource cloveForegroungAtIndex:[cloveBkg.name intValue]]];
         cloveImage.position = CGPointMake(cloveBkg.frame.size.width/2, cloveBkg.frame.size.height/2);
-        cloveImage.anchorPoint = CGPointMake(0.8, 0.5);
-        
-        NSLog(@"cloveImg Frame: %f, %f, %f, %f", cloveImage.frame.origin.x, cloveImage.frame.origin.y,
-              cloveImage.frame.size.width, cloveImage.frame.size.height);
-        NSLog(@"cloveBkg FRAME: %f, %f, %f, %f", cloveBkg.frame.origin.x, cloveBkg.frame.origin.y,
-              cloveBkg.frame.size.width, cloveBkg.frame.size.height);
-        
+        cloveImage.anchorPoint = CGPointMake(0.6, 0.5);
         
         cloveImage.affineTransform = CGAffineTransformMakeScale(0.8, 0.8);
         cloveBkg.affineTransform = CGAffineTransformMakeScale(container.bounds.size.width/640.0, container.bounds.size.height/640.0);
@@ -144,7 +138,7 @@ static float maxAlphavalue = 1.0;
     budLayer.position = [self convertPoint:self.center fromView:self.superview];
     budLayer.affineTransform = CGAffineTransformMakeScale(container.bounds.size.width/640.0, container.bounds.size.height/640.0);
     budLayer.name = kBudLayerName;
-    
+
     [self.layer addSublayer:container];
     [self.layer addSublayer:bg];
     [self.layer addSublayer:budLayer];
@@ -152,7 +146,7 @@ static float maxAlphavalue = 1.0;
     //    [super layoutSubviews];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
+ //////////////////////////////////////////////////////////////////////////////////////////
 - (void)reload {    
     CATransition* transition = [CATransition animation];
     transition.delegate = nil;
@@ -179,7 +173,7 @@ static float maxAlphavalue = 1.0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 - (float)calculateDistanceFromCenter:(CGPoint)point {
-    
+
     CGPoint center = CGPointMake(self.bounds.size.width/2.0f, self.bounds.size.height/2.0f);
 	float dx = point.x - center.x;
 	float dy = point.y - center.y;
@@ -189,16 +183,16 @@ static float maxAlphavalue = 1.0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    
+
     UITouch *touch = [touches anyObject];
     CGPoint delta = [touch locationInView:self];
     float dist = [self calculateDistanceFromCenter:delta];
     
     if (dist < 40 || dist > 100) {
         // forcing a tap to be on the ferrule
-        //        NSLog(@"ignoring tap (%f,%f)", delta.x, delta.y);
+//        NSLog(@"ignoring tap (%f,%f)", delta.x, delta.y);
         self.isTouchBegan = NO;
-        //        [self.delegate wheelDidReceiveBudTap:self];
+//        [self.delegate wheelDidReceiveBudTap:self];
         return;
     }
     self.isTouchBegan = YES;
@@ -236,9 +230,9 @@ static float maxAlphavalue = 1.0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    
+
     if (!self.isTouchBegan) return;
-    
+
     CGFloat radians = atan2f(container.affineTransform.b, container.affineTransform.a);    
     CGFloat newVal = 0.0;
     
